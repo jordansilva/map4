@@ -12,7 +12,8 @@ object VenuePoiMapper : Mapper<VenueResponse, POI> {
             description = response.description,
             category = response.categories.firstOrNull { it.primary }?.shortName,
             latitude = response.location.lat ?: 0.0,
-            longitude = response.location.lng ?: 0.0
+            longitude = response.location.lng ?: 0.0,
+            rating = response.rating
         )
     }
 }

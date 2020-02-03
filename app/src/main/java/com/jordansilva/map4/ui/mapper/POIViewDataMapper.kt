@@ -9,6 +9,7 @@ object POIViewDataMapper : ViewDataMapper<POI, POIViewData> {
             id = model.id,
             name = model.name,
             description = model.description,
+            category = model.category,
             latitude = model.latitude,
             longitude = model.longitude
         )

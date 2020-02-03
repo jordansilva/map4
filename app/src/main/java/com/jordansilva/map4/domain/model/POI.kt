@@ -6,5 +6,8 @@ data class POI(
     val latitude: Double,
     val longitude: Double,
     val description: String?,
-    val category: String?
+    val category: String?,
+    val image: String? = null,
+    val rating: Double? = null
 )
+

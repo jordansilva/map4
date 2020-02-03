@@ -17,6 +17,9 @@ class POIViewModel(private val getNearbyPlacesUseCase: GetPlacesByAreaUseCase) :
     private val _poiList = MutableLiveData<List<POIViewData>>()
     val poiList: LiveData<List<POIViewData>> = _poiList
 
+    private val _poiDetail = MutableLiveData<POIViewData>()
+    val poiDetail: LiveData<POIViewData> = _poiDetail
+
     private val _loading = MutableLiveData<Boolean>(false)
     val loading: LiveData<Boolean> = _loading
 
@@ -35,6 +38,11 @@ class POIViewModel(private val getNearbyPlacesUseCase: GetPlacesByAreaUseCase) :
                 .onSuccess(::handleSuccess)
                 .onFailure(::handleFailure)
         }.invokeOnCompletion { _loading.postValue(false) }
+    }
+
+    fun getPlace(placeId: String) {
+        val poi = poiList.value?.firstOrNull { it.id == placeId }
+        _poiDetail.postValue(poi)
     }
 
     private fun handleFailure(errorResult: ErrorResult) {

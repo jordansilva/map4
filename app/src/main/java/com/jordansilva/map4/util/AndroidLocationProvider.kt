@@ -14,7 +14,7 @@ import kotlinx.coroutines.tasks.await
 class AndroidLocationProvider(context: Context) : LocationProvider {
 
     private companion object {
-        private const val TIME_INTERVAL = 10000L
+        private const val TIME_INTERVAL = 30000L
         private const val FASTEST_INTERVAL = 10000L
         private const val PRIORITY = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
@@ -30,16 +30,12 @@ class AndroidLocationProvider(context: Context) : LocationProvider {
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
                 if (!isClosedForSend) {
-                    Log.d("getLocation", "$result.lastLocation")
                     offer(result.lastLocation)
                 }
             }
         }
         client.lastLocation.await<Location?>()?.let { send(it) }
         client.requestLocationUpdates(request, locationCallback, Looper.getMainLooper()).await()
-        awaitClose {
-            Log.d("getLocation", "removeLocationUpdates")
-            client.removeLocationUpdates(locationCallback)
-        }
+        awaitClose { client.removeLocationUpdates(locationCallback) }
     }
 }
