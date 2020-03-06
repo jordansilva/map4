@@ -9,4 +9,8 @@ data class POIViewData(
     val category: String? = null,
     val image: String? = null,
     val rating: Double? = null
-)
+) {
+
+    fun getRating(): String = rating.toString()
+
+}

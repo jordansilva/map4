@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -12,14 +11,16 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.jordansilva.map4.R
+import com.jordansilva.map4.databinding.FragmentMapsBinding
 import com.jordansilva.map4.ui.model.LocationViewData
 import com.jordansilva.map4.ui.model.POIViewData
 import com.jordansilva.map4.ui.poidetail.POIDetailFragment
 import com.jordansilva.map4.util.extensions.displayCircularReveal
 import com.jordansilva.map4.util.extensions.visible
+import com.jordansilva.map4.util.permissions.askPermission
+import com.jordansilva.map4.util.permissions.checkPermission
 import kotlinx.android.synthetic.main.fragment_maps.*
 import kotlinx.android.synthetic.main.map_item_card.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -28,6 +29,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MapsFragment : Fragment(R.layout.fragment_maps) {
 
     companion object {
+        private const val PERMISSION_CODE = 100
         fun newInstance() = MapsFragment()
     }
 
@@ -35,11 +37,14 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
     private val locationViewModel: LocationViewModel by viewModel()
 
     private var googleMap: GoogleMap? = null
-    private val listMarkers = mutableMapOf<String, MarkerOptions>()
-    private val listMarkersId = mutableMapOf<String, String>()
+    private val listMarkers = mutableMapOf<String, String>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val binding = FragmentMapsBinding.bind(view)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.poiViewModel = poiViewModel
+
         initUi()
     }
 
@@ -62,7 +67,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
                 setOnCameraIdleListener { getNearbyPlaces(projection.visibleRegion.latLngBounds) }
                 setOnMapClickListener { hideItemInfo() }
                 setOnMarkerClickListener {
-                    listMarkersId[it.id]?.let { poiId -> poiViewModel.getPlace(poiId) }
+                    listMarkers[it.id]?.let { poiId -> poiViewModel.getPlace(poiId) }
                     true
                 }
                 googleMap = this
@@ -73,9 +78,12 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
     }
 
     private fun enableMapLocation() {
-        if (checkPermission()) {
+        val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        if (checkPermission(*permissions)) {
             googleMap?.isMyLocationEnabled = true
-            locationViewModel.location.observe(viewLifecycleOwner, Observer { handleLocation(it) })
+            locationViewModel.location.observe(viewLifecycleOwner, Observer { handleNewLocation(it) })
+        } else {
+            askPermission(*permissions, requestCode = PERMISSION_CODE)
         }
     }
 
@@ -85,17 +93,6 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
     }
 
     private fun showItemInfo(poi: POIViewData): Boolean {
-        popupItem.txtName.text = poi.name
-        popupItem.txtCategory.text = poi.category
-        popupItem.txtDistance.text = "200m"
-
-        popupItem.txtRating.visible = poi.rating != null
-        popupItem.txtRating.text = poi.rating.toString()
-        popupItem.imgItem.visible = !poi.image.isNullOrBlank()
-
-        if (!popupItem.visible)
-            popupItem.displayCircularReveal()
-
         popupItem.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.container, POIDetailFragment.newInstance())
@@ -121,11 +118,10 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
     private fun addMakers(items: List<POIViewData>) {
         googleMap?.let { map ->
             items.forEach { poi ->
-                if (!listMarkers.containsKey(poi.id)) {
+                if (!listMarkers.values.contains(poi.id)) {
                     val markerOptions = makeMarker(poi)
-                    listMarkers[poi.id] = markerOptions
                     val marker = map.addMarker(markerOptions)
-                    listMarkersId[marker.id] = poi.id
+                    listMarkers[marker.id] = poi.id
                 }
             }
         }
@@ -135,27 +131,14 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
         return MarkerOptions()
             .position(LatLng(item.latitude, item.longitude))
             .title(item.name)
-            .snippet(item.description)
     }
 
-    private fun handleLocation(location: LocationViewData) {
+    private fun handleNewLocation(location: LocationViewData) {
         moveCameraLocation(location.latitude, location.longitude)
     }
 
-    //TODO: Extract to PermissionHelper
-    private fun checkPermission(): Boolean {
-        return if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) {
-            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-            requestPermissions(permissions, 100)
-            false
-        } else
-            true
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == 100) {
+        if (requestCode == PERMISSION_CODE) {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 enableMapLocation()
             } else {

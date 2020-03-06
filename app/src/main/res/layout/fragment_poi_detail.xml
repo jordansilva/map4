@@ -14,152 +14,96 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cardView"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/imgPOI"
         android:layout_marginTop="-20dp"
         android:background="@drawable/rounded_top"
-        android:backgroundTint="@android:color/white"
-        android:padding="32dp">
+        android:backgroundTint="@android:color/white">
 
-        <TextView
-            android:id="@+id/txtName"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/darkGray"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/btnLocation"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Ristorante Pizzeria La Lanterna" />
+            android:layout_marginTop="-20dp"
 
-        <ImageView
-            android:id="@+id/btnLocation"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:padding="32dp">
 
-        <TextView
-            android:id="@+id/txtRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:drawableEnd="@drawable/ic_orange_star_24"
-            android:gravity="center_vertical"
-            android:textColor="@color/orange"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtName"
-            tools:text="4.5" />
+            <!-- Name -->
+            <TextView
+                android:id="@+id/txtName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:textColor="@color/darkGray"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/btnLocation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Ristorante Pizzeria La Lanterna" />
 
-        <TextView
-            android:id="@+id/txtReviews"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textColor="@color/darkGray"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/txtRating"
-            app:layout_constraintStart_toEndOf="@+id/txtRating"
-            app:layout_constraintTop_toTopOf="@+id/txtRating"
-            tools:text="2.5k reviews" />
+            <ImageView
+                android:id="@+id/btnLocation"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:src="@drawable/circle_location"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="TODO" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtRating">
-
-            <com.google.android.material.chip.Chip
+            <!-- Rating & Reviews -->
+            <TextView
+                android:id="@+id/txtRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NEABY"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
+                android:layout_marginTop="8dp"
+                android:drawableEnd="@drawable/ic_orange_star_24"
+                android:gravity="center_vertical"
+                android:textColor="@color/orange"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                app:chipBackgroundColor="@color/lilac" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtName"
+                tools:text="4.5" />
 
-            <com.google.android.material.chip.Chip
+            <TextView
+                android:id="@+id/txtReviews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="VEGAN"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:chipBackgroundColor="@color/lightGreen" />
+                android:layout_marginStart="8dp"
+                android:textColor="@color/darkGray"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/txtRating"
+                app:layout_constraintStart_toEndOf="@+id/txtRating"
+                app:layout_constraintTop_toTopOf="@+id/txtRating"
+                tools:text="2.5k reviews" />
 
-        </com.google.android.material.chip.ChipGroup>
+            <LinearLayout
+                android:id="@+id/poiContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/txtRating">
 
-        <TextView
-            android:id="@+id/txtCategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/darkGray"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chipGroup"
-            tools:text="Wraps . Libanese" />
+                <include
+                    android:id="@+id/poiTags"
+                    layout="@layout/poi_detail_tags" />
 
-        <TextView
-            android:id="@+id/txtAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:drawableStart="@drawable/ic_pin"
-            android:drawablePadding="8dp"
-            android:padding="6dp"
-            android:textColor="@color/darkGray"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtCategory"
-            tools:text="200m away . 4065 Paulo Piedade Campos, Belo Horizonte" />
+                <include
+                    android:id="@+id/poiInfo"
+                    layout="@layout/poi_detail_info" />
 
-        <TextView
-            android:id="@+id/txtOpenHours"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_time"
-            android:drawablePadding="8dp"
-            android:padding="6dp"
-            android:textColor="@color/darkGray"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtAddress"
-            tools:text="Open . 13h - 23h . Tue - Sun" />
-
-        <TextView
-            android:id="@+id/txtPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_phone_24"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:padding="6dp"
-            android:textColor="@color/darkGray"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtOpenHours"
-            tools:text="+31 93455.8877" />
-
-        <TextView
-            android:id="@+id/txtWebsite"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_globe"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:padding="6dp"
-            android:textColor="@color/darkGray"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtPhone"
-            tools:text="www.google.com" />
+                <include
+                    android:id="@+id/poiDescription"
+                    layout="@layout/poi_detail_description" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

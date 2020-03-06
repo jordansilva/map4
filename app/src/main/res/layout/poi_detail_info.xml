@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:orientation="vertical"
+    tools:parentTag="LinearLayout">
+    <!-- Categories -->
+    <TextView
+        android:id="@+id/txtCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/darkGray"
+        tools:text="Wraps . Libanese" />
+
+    <!-- Data -->
+    <TextView
+        android:id="@+id/txtAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:drawableStart="@drawable/ic_pin"
+        android:drawablePadding="8dp"
+        android:padding="6dp"
+        android:textColor="@color/darkGray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtCategory"
+        tools:text="200m away . 4065 Paulo Piedade Campos, Belo Horizonte" />
+
+    <TextView
+        android:id="@+id/txtOpenHours"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_time"
+        android:drawablePadding="8dp"
+        android:padding="6dp"
+        android:textColor="@color/darkGray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtAddress"
+        tools:text="Open . 13h - 23h . Tue - Sun" />
+
+    <TextView
+        android:id="@+id/txtPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_phone_24"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:padding="6dp"
+        android:textColor="@color/darkGray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtOpenHours"
+        tools:text="+31 93455.8877" />
+
+    <TextView
+        android:id="@+id/txtWebsite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_globe"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:padding="6dp"
+        android:textColor="@color/darkGray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtPhone"
+        tools:text="www.google.com" />
+</merge>
